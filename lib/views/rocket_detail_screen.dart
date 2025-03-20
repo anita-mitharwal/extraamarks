@@ -3,12 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../viewmodel/rocket_viewmodel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class RocketDetailScreen extends ConsumerWidget {
   final String rocketId;
 
-  const RocketDetailScreen({Key? key, required this.rocketId})
-      : super(key: key);
+  const RocketDetailScreen({super.key, required this.rocketId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

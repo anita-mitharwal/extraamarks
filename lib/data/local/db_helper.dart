@@ -37,7 +37,7 @@ class DBHelper {
     );
   }
 
-  // ✅ Insert Rocket Data
+
   Future<void> insertRocket(Rocket rocket) async {
     final db = await database;
     await db.insert(
@@ -47,14 +47,12 @@ class DBHelper {
     );
   }
 
-  // ✅ Get All Rockets
   Future<List<Rocket>> getRockets() async {
     final db = await database;
     final result = await db.query('rockets');
     return result.map((e) => Rocket.fromMap(e)).toList();
   }
 
-  // ✅ Get Rocket Details by ID
   Future<Rocket?> getRocketById(String id) async {
     final db = await database;
     final result = await db.query('rockets', where: 'id = ?', whereArgs: [id]);
@@ -64,7 +62,6 @@ class DBHelper {
     return null;
   }
 
-  // ✅ Clear All Rockets (Optional)
   Future<void> clearRockets() async {
     final db = await database;
     await db.delete('rockets');

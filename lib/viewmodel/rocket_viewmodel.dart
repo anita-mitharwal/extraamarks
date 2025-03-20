@@ -3,11 +3,7 @@ import '../data/services/api_services.dart';
 import '../repository/rocket_repository.dart';
 import '../data/models/rocket_model.dart';
 
-
-
 final rocketRepositoryProvider = Provider((ref) => RocketRepository(apiService: ApiService()));
-
-// State management for the list of rockets
 class RocketNotifier extends StateNotifier<AsyncValue<List<Rocket>>> {
   RocketNotifier(this.ref) : super(const AsyncLoading());
 
@@ -17,7 +13,6 @@ class RocketNotifier extends StateNotifier<AsyncValue<List<Rocket>>> {
   bool _hasMore = true;
   bool _isLoading = false;
 
-  // ✅ Public Getter to track loading state
   bool get isLoading => _isLoading;
 
   Future<void> fetchRockets({bool isInitialLoad = false}) async {
@@ -26,7 +21,6 @@ class RocketNotifier extends StateNotifier<AsyncValue<List<Rocket>>> {
 
     try {
       final rockets = await ref.read(rocketRepositoryProvider).getRockets(limit: _limit, offset: _offset);
-
       if (rockets.isEmpty) {
         _hasMore = false;
       } else {

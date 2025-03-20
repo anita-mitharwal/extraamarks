@@ -4,7 +4,6 @@ class ErrorWidgetWithRetry extends StatelessWidget {
   final String errorMessage;
   final VoidCallback onRetry;
 
-  // ❗ Remove const from here
   const ErrorWidgetWithRetry({
     super.key,
     required this.errorMessage,

@@ -5,8 +5,6 @@ import '../../utilis/constants.dart';
 
 class ApiService {
   static const String baseUrl1 = baseUrl;
-
-  // ✅ Fetch Rocket List with Pagination
   Future<List<Rocket>> fetchRockets({int limit = 10, int offset = 0}) async {
     final response = await http.get(Uri.parse(baseUrl1));
 
@@ -18,7 +16,6 @@ class ApiService {
     }
   }
 
-  // ✅ Fetch Rocket Details using Rocket ID
   Future<Rocket> fetchRocketDetails(String id) async {
     final response = await http.get(Uri.parse("$baseUrl1/$id"));
 

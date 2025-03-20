@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-// ✅ Convert JSON string to List of Rockets (For API response)
 List<Rocket> rocketFromJson(String str) =>
     List<Rocket>.from(json.decode(str).map((x) => Rocket.fromJson(x)));
 
-// ✅ Convert List of Rockets to JSON string
 String rocketToJson(List<Rocket> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
@@ -37,7 +35,6 @@ class Rocket {
     required this.diameterFeet,
   });
 
-  // ✅ Convert JSON to Rocket Object (For API)
   factory Rocket.fromJson(Map<String, dynamic> json) {
     return Rocket(
       id: json["id"],
@@ -55,7 +52,6 @@ class Rocket {
     );
   }
 
-  // ✅ Convert Rocket Object to JSON (For API)
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -73,14 +69,13 @@ class Rocket {
     };
   }
 
-  // ✅ Convert Rocket Object to Map (For SQLite)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
       'country': country,
       'engines': engines,
-      'flickrImages': flickrImages.join(','), // Convert List to CSV
+      'flickrImages': flickrImages.join(','),
       'active': active ? 1 : 0,
       'costPerLaunch': costPerLaunch,
       'successRatePct': successRatePct,
@@ -91,14 +86,13 @@ class Rocket {
     };
   }
 
-  // ✅ Convert Map to Rocket Object (For SQLite)
   factory Rocket.fromMap(Map<String, dynamic> map) {
     return Rocket(
       id: map['id'],
       name: map['name'],
       country: map['country'],
       engines: map['engines'],
-      flickrImages: (map['flickrImages'] as String).split(','), // Convert CSV back to List
+      flickrImages: (map['flickrImages'] as String).split(','),
       active: map['active'] == 1,
       costPerLaunch: map['costPerLaunch'],
       successRatePct: map['successRatePct'],

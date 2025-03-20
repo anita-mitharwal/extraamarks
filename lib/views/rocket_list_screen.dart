@@ -6,7 +6,7 @@ import '../viewmodel/rocket_viewmodel.dart';
 import 'rocket_detail_screen.dart';
 
 class RocketListScreen extends ConsumerStatefulWidget {
-  const RocketListScreen({Key? key}) : super(key: key);
+  const RocketListScreen({super.key});
 
   @override
   ConsumerState<RocketListScreen> createState() => _RocketListScreenState();
@@ -17,7 +17,7 @@ class _RocketListScreenState extends ConsumerState<RocketListScreen> {
     try {
       await ref.read(rocketProvider.notifier).fetchRockets(isInitialLoad: true);
     } catch (e) {
-      print("❗ Error occurred: $e");
+      print("Error occurred: $e");
     }
   }
 
