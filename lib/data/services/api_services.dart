@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/rocket_model.dart';
+import '../../utilis/constants.dart';
 
 class ApiService {
-  static const String baseUrl = "https://api.spacexdata.com/v4/rockets";
+  static const String baseUrl1 = baseUrl;
 
   // ✅ Fetch Rocket List with Pagination
   Future<List<Rocket>> fetchRockets({int limit = 10, int offset = 0}) async {
-    final response = await http.get(Uri.parse(baseUrl));
+    final response = await http.get(Uri.parse(baseUrl1));
 
     if (response.statusCode == 200) {
       final allRockets = rocketFromJson(response.body);
@@ -19,7 +20,7 @@ class ApiService {
 
   // ✅ Fetch Rocket Details using Rocket ID
   Future<Rocket> fetchRocketDetails(String id) async {
-    final response = await http.get(Uri.parse("$baseUrl/$id"));
+    final response = await http.get(Uri.parse("$baseUrl1/$id"));
 
     if (response.statusCode == 200) {
       return Rocket.fromJson(json.decode(response.body));

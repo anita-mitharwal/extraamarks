@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../utilis/constants.dart';
 import '../viewmodel/rocket_viewmodel.dart';
 import 'rocket_detail_screen.dart';
 
@@ -32,11 +33,11 @@ class _RocketListScreenState extends ConsumerState<RocketListScreen> {
     final isLoading = ref.read(rocketProvider.notifier).isLoading;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("SpaceX Rockets")),
+      appBar: AppBar(title: const Text(appTitle)),
       body: rocketsState.when(
         data: (rockets) {
           if (rockets.isEmpty) {
-            return const Center(child: Text("No data available"));
+            return const Center(child: Text(noDataMessage));
           }
           return ListView.builder(
             controller: _scrollController,
@@ -50,7 +51,7 @@ class _RocketListScreenState extends ConsumerState<RocketListScreen> {
                 leading: Image.network(
                   rocket.flickrImages.isNotEmpty
                       ? rocket.flickrImages[0]
-                      : 'https://via.placeholder.com/150',
+                      : placeholderImage,
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
