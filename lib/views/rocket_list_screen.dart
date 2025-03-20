@@ -1,36 +1,29 @@
+import '../utilis/constants.dart';
+import '../widgets/error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../utilis/constants.dart';
 import '../viewmodel/rocket_viewmodel.dart';
 import 'rocket_detail_screen.dart';
 
 class RocketListScreen extends ConsumerStatefulWidget {
-  const RocketListScreen({super.key});
+  const RocketListScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<RocketListScreen> createState() => _RocketListScreenState();
 }
 
 class _RocketListScreenState extends ConsumerState<RocketListScreen> {
-  late ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      ref.read(rocketProvider.notifier).fetchRockets();
+  Future<void> _fetchRockets() async {
+    try {
+      await ref.read(rocketProvider.notifier).fetchRockets(isInitialLoad: true);
+    } catch (e) {
+      print("❗ Error occurred: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final rocketsState = ref.watch(rocketProvider);
-    final isLoading = ref.read(rocketProvider.notifier).isLoading;
 
     return Scaffold(
       appBar: AppBar(title: const Text(appTitle)),
@@ -40,12 +33,8 @@ class _RocketListScreenState extends ConsumerState<RocketListScreen> {
             return const Center(child: Text(noDataMessage));
           }
           return ListView.builder(
-            controller: _scrollController,
-            itemCount: rockets.length + (isLoading ? 1 : 0),
+            itemCount: rockets.length,
             itemBuilder: (context, index) {
-              if (index == rockets.length) {
-                return const Center(child: CircularProgressIndicator());
-              }
               final rocket = rockets[index];
               return ListTile(
                 leading: Image.network(
@@ -71,7 +60,10 @@ class _RocketListScreenState extends ConsumerState<RocketListScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text("Error: $error")),
+        error: (error, _) => ErrorWidgetWithRetry(
+          errorMessage: error.toString(),
+          onRetry: _fetchRockets,
+        ),
       ),
     );
   }
