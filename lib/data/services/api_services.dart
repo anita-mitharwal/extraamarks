@@ -5,7 +5,7 @@ import '../models/rocket_model.dart';
 class ApiService {
   static const String baseUrl = "https://api.spacexdata.com/v4/rockets";
 
-  // Fetch rocket list with optional limit and offset for pagination
+  // ✅ Fetch Rocket List with Pagination
   Future<List<Rocket>> fetchRockets({int limit = 10, int offset = 0}) async {
     final response = await http.get(Uri.parse(baseUrl));
 
@@ -17,7 +17,7 @@ class ApiService {
     }
   }
 
-  // ✅ Fetch rocket details using the rocket ID
+  // ✅ Fetch Rocket Details using Rocket ID
   Future<Rocket> fetchRocketDetails(String id) async {
     final response = await http.get(Uri.parse("$baseUrl/$id"));
 

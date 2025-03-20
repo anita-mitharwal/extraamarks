@@ -1,7 +1,12 @@
 import 'dart:convert';
 
+// ✅ Convert JSON string to List of Rockets (For API response)
 List<Rocket> rocketFromJson(String str) =>
     List<Rocket>.from(json.decode(str).map((x) => Rocket.fromJson(x)));
+
+// ✅ Convert List of Rockets to JSON string
+String rocketToJson(List<Rocket> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Rocket {
   final String id;
@@ -32,6 +37,7 @@ class Rocket {
     required this.diameterFeet,
   });
 
+  // ✅ Convert JSON to Rocket Object (For API)
   factory Rocket.fromJson(Map<String, dynamic> json) {
     return Rocket(
       id: json["id"],
@@ -44,8 +50,62 @@ class Rocket {
       successRatePct: json["success_rate_pct"],
       description: json["description"],
       wikipedia: json["wikipedia"],
-      heightFeet: json["height"]["feet"].toDouble(),
-      diameterFeet: json["diameter"]["feet"].toDouble(),
+      heightFeet: (json["height"]["feet"] ?? 0.0).toDouble(),
+      diameterFeet: (json["diameter"]["feet"] ?? 0.0).toDouble(),
+    );
+  }
+
+  // ✅ Convert Rocket Object to JSON (For API)
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "country": country,
+      "engines": engines,
+      "flickr_images": flickrImages,
+      "active": active,
+      "cost_per_launch": costPerLaunch,
+      "success_rate_pct": successRatePct,
+      "description": description,
+      "wikipedia": wikipedia,
+      "height": {"feet": heightFeet},
+      "diameter": {"feet": diameterFeet},
+    };
+  }
+
+  // ✅ Convert Rocket Object to Map (For SQLite)
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'country': country,
+      'engines': engines,
+      'flickrImages': flickrImages.join(','), // Convert List to CSV
+      'active': active ? 1 : 0,
+      'costPerLaunch': costPerLaunch,
+      'successRatePct': successRatePct,
+      'description': description,
+      'wikipedia': wikipedia,
+      'heightFeet': heightFeet,
+      'diameterFeet': diameterFeet,
+    };
+  }
+
+  // ✅ Convert Map to Rocket Object (For SQLite)
+  factory Rocket.fromMap(Map<String, dynamic> map) {
+    return Rocket(
+      id: map['id'],
+      name: map['name'],
+      country: map['country'],
+      engines: map['engines'],
+      flickrImages: (map['flickrImages'] as String).split(','), // Convert CSV back to List
+      active: map['active'] == 1,
+      costPerLaunch: map['costPerLaunch'],
+      successRatePct: map['successRatePct'],
+      description: map['description'],
+      wikipedia: map['wikipedia'],
+      heightFeet: map['heightFeet']?.toDouble() ?? 0.0,
+      diameterFeet: map['diameterFeet']?.toDouble() ?? 0.0,
     );
   }
 }
