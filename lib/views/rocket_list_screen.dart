@@ -27,43 +27,81 @@ class _RocketListScreenState extends ConsumerState<RocketListScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text(appTitle)),
-      body: rocketsState.when(
-        data: (rockets) {
-          if (rockets.isEmpty) {
-            return const Center(child: Text(noDataMessage));
-          }
-          return ListView.builder(
-            itemCount: rockets.length,
-            itemBuilder: (context, index) {
-              final rocket = rockets[index];
-              return ListTile(
-                leading: Image.network(
-                  rocket.flickrImages.isNotEmpty
-                      ? rocket.flickrImages[0]
-                      : placeholderImage,
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                ),
-                title: Text(rocket.name),
-                subtitle: Text("${rocket.country} - ${rocket.engines} engines"),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RocketDetailScreen(rocketId: rocket.id),
-                    ),
-                  );
-                },
-              );
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => ErrorWidgetWithRetry(
-          errorMessage: error.toString(),
-          onRetry: _fetchRockets,
-        ),
+      body: Column(
+        children: [
+          Container(
+            height: 1,
+            color: Colors.black,
+          ),
+
+
+          Expanded(
+            child: rocketsState.when(
+              data: (rockets) {
+                if (rockets.isEmpty) {
+                  return const Center(child: Text(noDataMessage));
+                }
+                return ListView.separated(
+                  itemCount: rockets.length,
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemBuilder: (context, index) {
+                    final rocket = rockets[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RocketDetailScreen(rocketId: rocket.id),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            Image.network(
+                              rocket.flickrImages.isNotEmpty
+                                  ? rocket.flickrImages[0]
+                                  : placeholderImage,
+                              width: double.infinity,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(height: 12),
+
+                            Text(
+                              rocket.name,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+
+                            Text(
+                              rocket.description,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, _) => ErrorWidgetWithRetry(
+                errorMessage: error.toString(),
+                onRetry: _fetchRockets,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

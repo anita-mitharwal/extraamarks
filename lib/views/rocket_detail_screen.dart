@@ -13,39 +13,83 @@ class RocketDetailScreen extends ConsumerWidget {
     final rocketDetails = ref.watch(rocketDetailsProvider(rocketId));
 
     return Scaffold(
-      appBar: AppBar(title: Text("Rocket Details")),
+      appBar: AppBar(
+        title: const Text("Rocket Details"),
+        centerTitle: true,
+      ),
       body: rocketDetails.when(
         data: (rocket) {
           return SingleChildScrollView(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(rocket.name, style: TextStyle(
-                    fontSize: 22, fontWeight: FontWeight.bold)),
-                SizedBox(height: 10),
-                Text("Active: ${rocket.active ? "Yes" : "No"}"),
-                Text("Cost per Launch: \$${rocket.costPerLaunch}"),
-                Text("Success Rate: ${rocket.successRatePct}%"),
-                Text("Height: ${rocket.heightFeet} ft"),
-                Text("Diameter: ${rocket.diameterFeet} ft"),
-                SizedBox(height: 10),
-                Text("Description: ${rocket.description}"),
-                SizedBox(height: 10),
+
+                Center(
+                  child: Text(
+                    rocket.name,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // ✅ Action-Value Alignment
+                _buildInfoRow("Active:", rocket.active ? "Yes" : "No"),
+                _buildInfoRow("Cost per Launch:", "\$${rocket.costPerLaunch}"),
+                _buildInfoRow("Success Rate:", "${rocket.successRatePct}%"),
+                _buildInfoRow("Height:", "${rocket.heightFeet} ft"),
+                _buildInfoRow("Diameter:", "${rocket.diameterFeet} ft"),
+
+                const SizedBox(height: 16),
+
+                const Text(
+                  "Description:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                Text(
+                  rocket.description,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
                 ElevatedButton(
                   onPressed: () => _launchURL(rocket.wikipedia),
-                  child: Text("More Info on Wikipedia"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[600],
+                    elevation: 6,
+                    shadowColor: Colors.black.withOpacity(0.3),
+                  ),
+                  child: const Text(
+                    "More Info on Wikipedia",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-                SizedBox(height: 10),
+
+                const SizedBox(height: 16),
+
                 SizedBox(
-                  height: 200,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
+                  height: 300, //
+                  child: PageView.builder(
                     itemCount: rocket.flickrImages.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.network(rocket.flickrImages[index]),
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          rocket.flickrImages[index],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
                       );
                     },
                   ),
@@ -54,9 +98,28 @@ class RocketDetailScreen extends ConsumerWidget {
             ),
           );
         },
-        loading: () => Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) =>
-            Center(child: Text("Failed to load rocket details")),
+        const Center(child: Text("Failed to load rocket details")),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 18),
+          ),
+        ],
       ),
     );
   }
@@ -71,4 +134,3 @@ class RocketDetailScreen extends ConsumerWidget {
     }
   }
 }
-
