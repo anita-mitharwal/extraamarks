@@ -1,16 +1,11 @@
-# extraaedge_task
+# Extraaedge_task
 
-A new Flutter project.
+Flutter Task for Company ExtraaEdge. 
+Architeture Used: MVVM
+State Management Technique : Riverpod
+URl Fetching: HTTP
+Local Db Suing : SQFlite
+Here we are fetching the details from the given apis i.e
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Get Rockets API: GET https://api.spacexdata.com/v4/rockets
+- Get Rocket Details API: GET https://api.spacexdata.com/v4/rockets/:id
