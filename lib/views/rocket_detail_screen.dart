@@ -36,7 +36,6 @@ class RocketDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // ✅ Action-Value Alignment
                 _buildInfoRow("Active:", rocket.active ? "Yes" : "No"),
                 _buildInfoRow("Cost per Launch:", "\$${rocket.costPerLaunch}"),
                 _buildInfoRow("Success Rate:", "${rocket.successRatePct}%"),
@@ -64,7 +63,7 @@ class RocketDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
 
                 ElevatedButton(
-                  onPressed: () => _launchURL(rocket.wikipedia),
+                  onPressed: () => _launchURL(context, rocket.wikipedia),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[600],
                     elevation: 6,
@@ -124,13 +123,36 @@ class RocketDetailScreen extends ConsumerWidget {
     );
   }
 
-  void _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
+  void _launchURL(BuildContext context, String url) async {
+    try {
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://$url';
+      }
+      final Uri uri = Uri.parse(url);
+      print("Attempting to launch: $uri");
 
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      throw Exception('Could not launch $url');
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.platformDefault,
+        );
+      } else {
+        print("No app found to handle: $uri");
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('No app found to open URL')),
+          );
+        }
+      }
+    } catch (e) {
+      print("Launch error: $e");
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
+
 }
+

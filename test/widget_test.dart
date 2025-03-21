@@ -47,10 +47,8 @@ void main() {
       ),
     ];
 
-    // ✅ Mock API call
     when(mockRepository.getRockets()).thenAnswer((_) async => rockets);
 
-    // ✅ Override the provider with a mock notifier
     final mockNotifier = RocketNotifier(mockRepository as Ref<Object?>)..fetchRockets();
 
     await tester.pumpWidget(
@@ -64,7 +62,6 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    // ✅ Verify data display
     expect(find.text('Falcon 9'), findsOneWidget);
     expect(find.text('USA - 9 engines'), findsOneWidget);
   });
@@ -88,10 +85,8 @@ void main() {
       ),
     ];
 
-    // ✅ Mock API call
     when(mockRepository.getRockets()).thenAnswer((_) async => rockets);
 
-    // ✅ Use MockRocketNotifier
     final mockNotifier = MockRocketNotifier(mockRepository);
     await mockNotifier.fetchRockets();
 
@@ -106,11 +101,9 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    // ✅ Tap on the first rocket
     await tester.tap(find.text('Falcon 9'));
     await tester.pumpAndSettle();
 
-    // ✅ Verify if the detail screen is displayed
     expect(find.byType(RocketDetailScreen), findsOneWidget);
     expect(find.text('Falcon 9'), findsWidgets);
     expect(find.text('Reusable rocket by SpaceX'), findsWidgets);
@@ -124,16 +117,13 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: RocketListScreen()));
     await tester.pumpAndSettle();
 
-    // Check for error message and button
     expect(
         find.text('Failed to load rockets. Please try again.'), findsOneWidget);
     expect(find.text('Try Again'), findsOneWidget);
 
-    // Tap on the Try Again button
     await tester.tap(find.text('Try Again'));
     await tester.pumpAndSettle();
 
-    // Verify API called twice (initial call + retry)
     verify(mockRepository.getRockets()).called(2);
   });
 }

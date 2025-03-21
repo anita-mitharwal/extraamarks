@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'mocks.mocks.dart'; // Import generated mock
+import 'mocks.mocks.dart';
 
 void main() {
-  late MockRocketRepository mockRepository; // Use the generated mock class
+  late MockRocketRepository mockRepository;
 
   setUp(() {
     mockRepository = MockRocketRepository();
