@@ -4,7 +4,7 @@
 - Architeture Used: MVVM
 - State Management Technique : Riverpod
 - URl Fetching: HTTP
-- Local Db using : SQFlite
+- Local Db using : SQlite
 Here we are fetching the details from the given apis i.e
 
 - Get Rockets API: GET https://api.spacexdata.com/v4/rockets
